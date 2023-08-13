@@ -4,10 +4,7 @@ import model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +44,29 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public User oneById(int id) {
-        return null;
+        User result = new User();
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "SELECT * FROM \"user\" WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            resultSet.next();
+
+            result.setId(resultSet.getInt("id"));
+            result.setUsername(resultSet.getString("username"));
+            result.setUsername(resultSet.getString("email"));
+            result.setUsername(resultSet.getString("password"));
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override

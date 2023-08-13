@@ -3,15 +3,14 @@ package model;
 import lombok.*;
 
 @Getter
+@Setter
 @EqualsAndHashCode
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class User {
     private int id;
-    @NonNull
     private String username;
-    @NonNull
     private String email;
-    @NonNull
     private String password;
 }

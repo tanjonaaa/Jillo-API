@@ -20,7 +20,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserById(int id) {
-        return null;
+        User result = this.repository.oneById(id);
+        if(result.getId() <= 0){
+            return null;
+        }else {
+            return result;
+        }
     }
 
     @Override
