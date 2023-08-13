@@ -6,6 +6,7 @@
 - Clone the repo `git clone https://github.com/tanjonaaa/Jillo-API.git`
 - Open the project with your IDE and update the dependencies (We use Maven)
 - Set up the database by executing the `init.sql` file in the `MCD` directory
+- Change database credentials in `src/main/resources/application.properties`
 - Start the server by running the `JilloApplication` file in `src/main/java/co/tanjona/man/jillo`
 
 ### Features
