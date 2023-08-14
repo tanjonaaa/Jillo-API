@@ -112,8 +112,22 @@ public class JdbcUserRepository implements UserRepository{
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(User user) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "DELETE FROM \"user\" WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
+            statement.setInt(1, user.getId());
+
+            int rowCount = statement.executeUpdate();
+            System.out.println(rowCount+" suppression réussie");
+
+            statement.close();
+            connection.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

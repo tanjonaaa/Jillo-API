@@ -10,5 +10,5 @@ public interface UserRepository {
     User oneByEmail(String email);
     void save(User user);
     void update(User user);
-    void delete(int id);
+    void delete(User user);
 }

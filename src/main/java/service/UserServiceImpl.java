@@ -3,7 +3,6 @@ package service;
 import model.User;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
-
 import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
@@ -50,9 +49,14 @@ public class UserServiceImpl implements UserService{
             System.out.println("L'utilisateur que vous voulez modifier n'existe pas");
         }
     }
-
+    
     @Override
     public void deleteUser(int id) {
-
+        User foundUser = this.repository.oneById(id);
+        if(foundUser != null){
+            this.repository.delete(foundUser);
+        }else {
+            System.out.println("Suppression ratée");
+        }
     }
 }
