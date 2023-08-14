@@ -39,8 +39,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUser(int id) {
-
+    public void updateUser(User user) {
+        User foundUser = this.repository.oneById(user.getId());
+        if(foundUser != null){
+            foundUser.setUsername(user.getUsername());
+            foundUser.setEmail(user.getEmail());
+            foundUser.setPassword(user.getPassword());
+            this.repository.update(foundUser);
+        }else {
+            System.out.println("L'utilisateur que vous voulez modifier n'existe pas");
+        }
     }
 
     @Override

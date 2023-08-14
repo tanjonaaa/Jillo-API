@@ -57,8 +57,8 @@ public class JdbcUserRepository implements UserRepository{
 
             result.setId(resultSet.getInt("id"));
             result.setUsername(resultSet.getString("username"));
-            result.setUsername(resultSet.getString("email"));
-            result.setUsername(resultSet.getString("password"));
+            result.setEmail(resultSet.getString("email"));
+            result.setPassword(resultSet.getString("password"));
 
             statement.close();
             connection.close();
@@ -91,7 +91,24 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public void update(User user) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "UPDATE \"user\" SET username = ?, email = ?, password = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPassword());
+            statement.setInt(4, user.getId());
+
+            statement.executeUpdate();
+            System.out.println("Les données de l'utilisateur ont bien été mises à jour");
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

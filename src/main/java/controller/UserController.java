@@ -31,8 +31,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public String updateUser(@PathVariable int id){
-        return "Update the user with the id "+ id;
+    public void updateUser(@PathVariable int id, @RequestBody User user){
+        user.setId(id);
+        this.service.updateUser(user);
     }
 
     @DeleteMapping("/{id}")
