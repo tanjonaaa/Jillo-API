@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import service.UserService;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -27,8 +26,8 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String addUser(){
-        return "Add a new User";
+    public void addUser(@RequestBody User user){
+        this.service.addUser(user);
     }
 
     @PutMapping("/{id}")

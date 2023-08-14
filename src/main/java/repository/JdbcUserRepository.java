@@ -14,7 +14,6 @@ public class JdbcUserRepository implements UserRepository{
     public JdbcUserRepository(DataSource dataSource){
         this.dataSource = dataSource;
     }
-
     @Override
     public List<User> all() {
         List<User> results = new ArrayList<>();
@@ -71,7 +70,23 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public void save(User user) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "INSERT INTO \"user\" (username, email, password) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getPassword());
+
+            statement.executeUpdate();
+            System.out.println("Votre utilisateur a bien été inséré");
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
