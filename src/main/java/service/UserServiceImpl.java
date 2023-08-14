@@ -30,7 +30,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void addUser(User user) {
-        this.repository.save(user);
+        User foundUser = this.repository.oneByEmail(user.getEmail());
+        if(foundUser.getId() <= 0){
+            this.repository.save(user);
+        }else {
+            System.out.println("Cet email est déjà pris");
+        }
     }
 
     @Override

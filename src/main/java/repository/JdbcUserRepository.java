@@ -98,4 +98,26 @@ public class JdbcUserRepository implements UserRepository{
     public void delete(int id) {
 
     }
+
+    @Override
+    public User oneByEmail(String email){
+        User user = new User();
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "SELECT * FROM \"user\" WHERE email = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setString(1, email);
+
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            user.setId(resultSet.getInt("id"));
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return user;
+    }
 }
