@@ -69,6 +69,3 @@ CREATE TABLE IF NOT EXISTS public.to_be_assigned_to(
     ,CONSTRAINT to_be_assigned_to_task_FK FOREIGN KEY (id_task) REFERENCES public.task(id)
     ,CONSTRAINT to_be_assigned_to_user0_FK FOREIGN KEY (id_user) REFERENCES public.user(id)
 )WITHOUT OIDS;
-
-
-
