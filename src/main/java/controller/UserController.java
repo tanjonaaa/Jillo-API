@@ -26,14 +26,14 @@ public class UserController {
     }
 
     @PostMapping("")
-    public void addUser(@RequestBody User user){
-        this.service.addUser(user);
+    public User addUser(@RequestBody User user){
+        return this.service.addUser(user);
     }
 
     @PutMapping("/{id}")
-    public void updateUser(@PathVariable int id, @RequestBody User user){
+    public User updateUser(@PathVariable int id, @RequestBody User user){
         user.setId(id);
-        this.service.updateUser(user);
+        return this.service.updateUser(user);
     }
 
     @DeleteMapping("/{id}")

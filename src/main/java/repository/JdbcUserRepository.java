@@ -24,13 +24,7 @@ public class JdbcUserRepository implements UserRepository{
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()){
-                User user = new User(
-                        resultSet.getInt("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("email"),
-                        resultSet.getString("password")
-                );
-                results.add(user);
+                results.add(mapResultSet(resultSet));
             }
 
             statement.close();
@@ -43,7 +37,7 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public User oneById(int id) {
-        User result = new User();
+        User user = new User();
         try{
             Connection connection = dataSource.getConnection();
             String sql = "SELECT * FROM \"user\" WHERE id = ?";
@@ -55,17 +49,14 @@ public class JdbcUserRepository implements UserRepository{
 
             resultSet.next();
 
-            result.setId(resultSet.getInt("id"));
-            result.setUsername(resultSet.getString("username"));
-            result.setEmail(resultSet.getString("email"));
-            result.setPassword(resultSet.getString("password"));
+            user = mapResultSet(resultSet);
 
             statement.close();
             connection.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
-        return result;
+        return user;
     }
 
     @Override
@@ -142,10 +133,23 @@ public class JdbcUserRepository implements UserRepository{
 
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            user.setId(resultSet.getInt("id"));
+            user = mapResultSet(resultSet);
 
             statement.close();
             connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    private User mapResultSet (ResultSet resultSet){
+        User user = new User();
+        try{
+            user.setId(resultSet.getInt("id"));
+            user.setUsername(resultSet.getString("username"));
+            user.setEmail(resultSet.getString("email"));
+            user.setPassword(resultSet.getString("password"));
         }catch (SQLException e){
             e.printStackTrace();
         }
