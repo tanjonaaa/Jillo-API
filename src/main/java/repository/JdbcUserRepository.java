@@ -143,16 +143,12 @@ public class JdbcUserRepository implements UserRepository{
         return user;
     }
 
-    private User mapResultSet (ResultSet resultSet){
-        User user = new User();
-        try{
+    private User mapResultSet (ResultSet resultSet) throws SQLException{
+            User user = new User();
             user.setId(resultSet.getInt("id"));
             user.setUsername(resultSet.getString("username"));
             user.setEmail(resultSet.getString("email"));
             user.setPassword(resultSet.getString("password"));
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return user;
+            return user;
     }
 }
