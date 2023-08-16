@@ -81,7 +81,23 @@ public class JdbcProjectRepository implements ProjectRepository{
 
     @Override
     public void save(Project project) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "INSERT INTO \"project\" (title, description, id_user) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
+            statement.setString(1, project.getTitle());
+            statement.setString(2, project.getDescription());
+            statement.setInt(3, project.getIdUser());
+
+            statement.executeUpdate();
+            System.out.println("Votre projet a bien été inséré");
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

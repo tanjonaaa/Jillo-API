@@ -26,7 +26,14 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project addProject(Project project) {
-        return null;
+        Project foundProject = this.repository.oneByTitle(project.getTitle());
+        if(foundProject.getId() != 0){
+            return null;
+        }else {
+            System.out.println("Insertion");
+            this.repository.save(project);
+            return this.repository.oneByTitle(project.getTitle());
+        }
     }
 
     @Override
