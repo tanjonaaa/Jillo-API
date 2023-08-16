@@ -1,6 +1,7 @@
 package service;
 
 import model.Project;
+import model.User;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
 
@@ -35,6 +36,11 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public void deleteProject(int id) {
-
+        Project foundProject = this.repository.oneById(id);
+        if(foundProject.getId() != 0){
+            this.repository.delete(foundProject);
+        }else {
+            System.out.println("Suppression ratée");
+        }
     }
 }

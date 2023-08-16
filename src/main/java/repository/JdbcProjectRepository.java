@@ -60,7 +60,23 @@ public class JdbcProjectRepository implements ProjectRepository{
 
     @Override
     public Project oneByTitle(String title) {
-        return null;
+        Project project = new Project();
+        try{
+            Connection connection = this.dataSource.getConnection();
+            String sql = "SELECT * FROM \"project\" WHERE title = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setString(1, title);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            project = mapResultSet(resultSet);
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return project;
     }
 
     @Override
@@ -75,7 +91,20 @@ public class JdbcProjectRepository implements ProjectRepository{
 
     @Override
     public void delete(Project project) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "DELETE FROM \"project\" WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
+            statement.setInt(1, project.getId());
+            statement.executeUpdate();
+            System.out.println("Le projet a bien été supprimé");
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     private Project mapResultSet (ResultSet resultSet) throws SQLException {
