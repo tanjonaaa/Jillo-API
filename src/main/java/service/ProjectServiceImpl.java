@@ -21,7 +21,12 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project getProjectById(int id) {
-        return this.repository.oneById(id);
+        Project foundProject = this.repository.oneById(id);
+        if(foundProject.getId() != 0){
+            return foundProject;
+        }else {
+            return null;
+        }
     }
 
     @Override
