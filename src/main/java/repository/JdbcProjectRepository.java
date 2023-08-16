@@ -102,7 +102,24 @@ public class JdbcProjectRepository implements ProjectRepository{
 
     @Override
     public void update(Project project) {
+        try{
+            Connection connection = dataSource.getConnection();
+            String sql = "UPDATE \"project\" SET title = ?, description = ?, id_user = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
 
+            statement.setString(1, project.getTitle());
+            statement.setString(2, project.getDescription());
+            statement.setInt(3, project.getIdUser());
+            statement.setInt(4, project.getId());
+
+            statement.executeUpdate();
+            System.out.println("Les données du projet ont bien été mises à jour");
+
+            statement.close();
+            connection.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

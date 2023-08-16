@@ -1,7 +1,6 @@
 package service;
 
 import model.Project;
-import model.User;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
 
@@ -43,7 +42,16 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project updateProject(Project project) {
-        return null;
+        Project foundProject = this.repository.oneById(project.getId());
+        if(foundProject.getId() != 0){
+            foundProject.setTitle(project.getTitle());
+            foundProject.setDescription(project.getDescription());
+            foundProject.setIdUser(project.getIdUser());
+            this.repository.update(foundProject);
+            return this.repository.oneById(project.getId());
+        }else {
+            return null;
+        }
     }
 
     @Override
