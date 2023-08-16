@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public User addUser(User user) {
         User foundUser = this.repository.oneByEmail(user.getEmail());
-        System.out.println(foundUser);
         if(foundUser.getId() != 0){
             return null;
         }else {

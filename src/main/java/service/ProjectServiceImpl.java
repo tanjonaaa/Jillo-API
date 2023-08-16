@@ -2,19 +2,25 @@ package service;
 
 import model.Project;
 import org.springframework.stereotype.Service;
+import repository.JdbcProjectRepository;
 
 import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService{
+
+    private JdbcProjectRepository repository;
+    public ProjectServiceImpl(JdbcProjectRepository repository) {
+        this.repository = repository;
+    }
     @Override
     public List<Project> getAllProjects() {
-        return null;
+        return this.repository.all();
     }
 
     @Override
     public Project getProjectById(int id) {
-        return null;
+        return this.repository.oneById(id);
     }
 
     @Override

@@ -14,4 +14,5 @@ public class Project {
     @NonNull
     private String title;
     private String description;
+    private int idUser;
 }

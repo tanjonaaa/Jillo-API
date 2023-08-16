@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class JdbcUserRepository implements UserRepository{
-    DataSource dataSource;
+    private DataSource dataSource;
     public JdbcUserRepository(DataSource dataSource){
         this.dataSource = dataSource;
     }
