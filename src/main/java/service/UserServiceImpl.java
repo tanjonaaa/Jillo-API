@@ -19,7 +19,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserById(int id) {
-        return this.repository.oneById(id);
+        User foundUser = this.repository.oneById(id);
+        if(foundUser.getId() != 0){
+            return foundUser;
+        }else{
+            return null;
+        }
     }
 
     @Override
