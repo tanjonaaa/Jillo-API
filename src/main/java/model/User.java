@@ -3,9 +3,12 @@ package model;
 import lombok.*;
 
 @Getter
+@Setter
 @EqualsAndHashCode
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(force = true)
+@ToString
+@RequiredArgsConstructor
 public class User {
     private int id;
     @NonNull

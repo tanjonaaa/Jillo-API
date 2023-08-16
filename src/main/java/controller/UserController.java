@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import service.UserService;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,22 +21,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String getUserById(@PathVariable int id){
-        return "Get the user "+id;
+    public User getUserById(@PathVariable int id){
+        return this.service.getUserById(id);
     }
 
     @PostMapping("")
-    public String addUser(){
-        return "Add a new User";
+    public User addUser(@RequestBody User user){
+        return this.service.addUser(user);
     }
 
     @PutMapping("/{id}")
-    public String updateUser(@PathVariable int id){
-        return "Update the user with the id "+ id;
+    public User updateUser(@PathVariable int id, @RequestBody User user){
+        user.setId(id);
+        return this.service.updateUser(user);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable int id){
-        return "Delete the user with the id "+id;
+    public void deleteUser(@PathVariable int id){
+        this.service.deleteUser(id);
     }
 }
