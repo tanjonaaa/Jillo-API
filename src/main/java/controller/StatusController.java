@@ -26,14 +26,14 @@ public class StatusController {
     }
 
     @PostMapping("")
-    public Status addStatus(@RequestBody Status Status){
-        return this.service.addStatus(Status);
+    public Status addStatus(@RequestBody Status status){
+        return this.service.addStatus(status);
     }
 
     @PutMapping("/{id}")
-    public Status updateStatus(@PathVariable int id, @RequestBody Status Status){
-        Status.setId(id);
-        return this.service.updateStatus(Status);
+    public Status updateStatus(@PathVariable int id, @RequestBody Status status){
+        status.setId(id);
+        return this.service.updateStatus(status);
     }
 
     @DeleteMapping("/{id}")
