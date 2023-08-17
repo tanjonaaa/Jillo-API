@@ -1,5 +1,6 @@
 package service;
 
+import model.Project;
 import model.Status;
 import org.springframework.stereotype.Service;
 import repository.StatusRepository;
@@ -19,7 +20,12 @@ public class StatusServiceImpl implements StatusService{
 
     @Override
     public Status getStatusById(int id) {
-        return this.repository.oneById(id);
+        Status foundStatus = this.repository.oneById(id);
+        if(foundStatus.getId() != 0){
+            return foundStatus;
+        }else {
+            return null;
+        }
     }
 
     @Override
