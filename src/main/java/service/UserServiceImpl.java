@@ -25,10 +25,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public User addUser(User user) {
         User foundUser = this.repository.oneByEmail(user.getEmail());
-        System.out.println(foundUser);
         if(foundUser.getId() != 0){
             return null;
         }else {
+            System.out.println("Insertion");
             this.repository.save(user);
             return this.repository.oneByEmail(user.getEmail());
         }
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
             foundUser.setEmail(user.getEmail());
             foundUser.setPassword(user.getPassword());
             this.repository.update(foundUser);
-            return this.repository.oneByEmail(foundUser.getEmail());
+            return this.repository.oneById(user.getId());
         }else {
             return null;
         }
