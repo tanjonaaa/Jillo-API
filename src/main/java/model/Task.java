@@ -2,7 +2,7 @@ package model;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class Task {
     @NonNull
     private String title;
     private String description;
-    private LocalDateTime deadline;
+    private Timestamp deadline;
     private int idProject;
     private int idStatus;
     private int idUser;
