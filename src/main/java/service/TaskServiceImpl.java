@@ -19,21 +19,45 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public Task getTaskById(int id) {
-        return null;
+        return this.repository.oneById(id);
     }
 
     @Override
     public Task addTask(Task task) {
-        return null;
+        Task foundTask = this.repository.oneByTitle(task.getTitle());
+        if(foundTask.getId() != 0){
+            return null;
+        }else {
+            System.out.println("Insertion");
+            this.repository.save(task);
+            return this.repository.oneByTitle(task.getTitle());
+        }
     }
 
     @Override
     public Task updateTask(Task task) {
-        return null;
+        Task foundTask = this.repository.oneById(task.getId());
+        if(foundTask.getId() != 0){
+            foundTask.setTitle(task.getTitle());
+            foundTask.setDescription(task.getDescription());
+            foundTask.setDeadline(task.getDeadline());
+            foundTask.setIdUser(task.getIdUser());
+            foundTask.setIdProject(task.getIdProject());
+            foundTask.setIdStatus(task.getIdStatus());
+            this.repository.update(foundTask);
+            return this.repository.oneById(task.getId());
+        }else {
+            return null;
+        }
     }
 
     @Override
     public void deleteTask(int id) {
-
+        Task foundTask = this.repository.oneById(id);
+        if(foundTask.getId() != 0){
+            this.repository.delete(foundTask);
+        }else {
+            System.out.println("Suppression ratée");
+        }
     }
 }
