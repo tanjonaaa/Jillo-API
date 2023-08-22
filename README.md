@@ -5,7 +5,8 @@
 ### Initialization
 - Clone the repo `git clone https://github.com/tanjonaaa/Jillo-API.git`
 - Open the project with your IDE and update the dependencies (We use Maven)
-- Set up the database by executing the sql files in the `MCD` directory **IN THE FOLLOWING ORDER** `init.sql`>`migrations.sql`>`mocks.sql`(This one is optional, only if you need some mocks)
+- Set up the database by executing the `init.sql` file in the `MCD` directory
+- Change database credentials in `src/main/resources/application.properties`
 - Start the server by running the `JilloApplication` file in `src/main/java/co/tanjona/man/jillo`
 
 ### Features
@@ -17,5 +18,5 @@
 - Add `users` to a project
 - Remove `users` from a project
 - Assign `tasks` to one or multiple `users` 
-- Change the status of a `task` (Draft - Planned - In progress - Done)
+- Change the status of a `task` (Planned - In progress - Done)
 
