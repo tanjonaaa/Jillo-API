@@ -47,9 +47,11 @@ public class JdbcUserRepository implements UserRepository{
 
             ResultSet resultSet = statement.executeQuery();
 
-            resultSet.next();
-
-            user = mapResultSet(resultSet);
+            if(!resultSet.next()){
+                user = null;
+            }else {
+                user = mapResultSet(resultSet);
+            }
 
             statement.close();
             connection.close();
@@ -132,8 +134,12 @@ public class JdbcUserRepository implements UserRepository{
             statement.setString(1, email);
 
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            user = mapResultSet(resultSet);
+
+            if(!resultSet.next()){
+                user = null;
+            }else {
+                user = mapResultSet(resultSet);
+            }
 
             statement.close();
             connection.close();

@@ -1,6 +1,7 @@
 package controller;
 
 import model.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.UserService;
 
@@ -16,28 +17,44 @@ public class UserController {
     }
 
     @GetMapping("")
-    public List<User> getAllUsers(){
-        return this.service.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(this.service.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id){
-        return this.service.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable int id){
+        User user = this.service.getUserById(id);
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("")
-    public User addUser(@RequestBody User user){
-        return this.service.addUser(user);
+    public ResponseEntity<User> addUser(@RequestBody User user){
+        User createdUser = this.service.addUser(user);
+        if(createdUser == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(createdUser);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody User user){
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User user){
         user.setId(id);
-        return this.service.updateUser(user);
+        User updatedUser = this.service.updateUser(user);
+        if(updatedUser == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable int id){
-        this.service.deleteUser(id);
+    public ResponseEntity<Integer> deleteUser(@PathVariable int id){
+        int deleted = this.service.deleteUser(id);
+        if(deleted == 0){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }

@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User addUser(User user) {
         User foundUser = this.repository.oneByEmail(user.getEmail());
-        if(foundUser.getId() != 0){
+        if(foundUser != null){
             return null;
         }else {
             System.out.println("Insertion");
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User updateUser(User user) {
         User foundUser = this.repository.oneById(user.getId());
-        if(foundUser.getId() != 0){
+        if(foundUser != null){
             foundUser.setUsername(user.getUsername());
             foundUser.setEmail(user.getEmail());
             foundUser.setPassword(user.getPassword());
@@ -49,12 +49,13 @@ public class UserServiceImpl implements UserService{
     }
     
     @Override
-    public void deleteUser(int id) {
+    public int deleteUser(int id) {
         User foundUser = this.repository.oneById(id);
-        if(foundUser.getId() != 0){
+        if(foundUser != null){
             this.repository.delete(foundUser);
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
     }
 }
