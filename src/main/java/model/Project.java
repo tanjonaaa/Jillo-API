@@ -10,9 +10,10 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class Project {
-    private int id;
+    private Integer id;
     @NonNull
     private String title;
     private String description;
-    private int idUser;
+    @NonNull
+    private Integer idUser;
 }

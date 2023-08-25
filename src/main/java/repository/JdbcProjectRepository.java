@@ -47,8 +47,12 @@ public class JdbcProjectRepository implements ProjectRepository{
 
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            project = mapResultSet(resultSet);
+
+            if(!resultSet.next()){
+                project = null;
+            }else {
+                project = mapResultSet(resultSet);
+            }
 
             statement.close();
             connection.close();
@@ -68,8 +72,12 @@ public class JdbcProjectRepository implements ProjectRepository{
 
             statement.setString(1, title);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            project = mapResultSet(resultSet);
+
+            if(!resultSet.next()){
+                project = null;
+            }else{
+                project = mapResultSet(resultSet);
+            }
 
             statement.close();
             connection.close();
