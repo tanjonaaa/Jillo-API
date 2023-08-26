@@ -4,37 +4,31 @@ import model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
-public class JdbcUserRepository implements UserRepository{
-    private DataSource dataSource;
-    public JdbcUserRepository(DataSource dataSource){
-        this.dataSource = dataSource;
+public class JdbcUserRepository extends JDBCRepository<User>{
+    private final static String tableName = "user";
+    private final static List<String> columns = Arrays.asList("username", "email", "password");
+    private final static String uniqueField = "email";
+    public JdbcUserRepository(DataSource dataSource) {
+        super(dataSource, tableName, uniqueField, columns);
     }
+
     @Override
-    public List<User> all() {
-        List<User> results = new ArrayList<>();
-        try {
-            Connection connection = dataSource.getConnection();
-            String sql = "SELECT * FROM \"user\"";
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()){
-                results.add(mapResultSet(resultSet));
-            }
-
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return results;
+    protected User mapResultSet(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setUsername(resultSet.getString("username"));
+        user.setEmail(resultSet.getString("email"));
+        user.setPassword(resultSet.getString("password"));
+        return user;
     }
 
+    /*
     @Override
     public User oneById(int id) {
         User user = new User();
@@ -157,4 +151,5 @@ public class JdbcUserRepository implements UserRepository{
             user.setPassword(resultSet.getString("password"));
             return user;
     }
+     */
 }
