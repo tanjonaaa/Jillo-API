@@ -7,7 +7,7 @@ import repository.JdbcStatusRepository;
 import java.util.List;
 @Service
 public class StatusServiceImpl implements StatusService{
-    private JdbcStatusRepository repository;
+    private final JdbcStatusRepository repository;
 
     public StatusServiceImpl(JdbcStatusRepository repository) {
         this.repository = repository;
@@ -20,12 +20,7 @@ public class StatusServiceImpl implements StatusService{
 
     @Override
     public Status getStatusById(int id) {
-        Status foundStatus = this.repository.oneById(id);
-        if(foundStatus != null){
-            return foundStatus;
-        }else {
-            return null;
-        }
+        return this.repository.oneById(id);
     }
 
     @Override

@@ -12,13 +12,16 @@ import java.sql.Timestamp;
 @ToString
 @EqualsAndHashCode
 public class Task {
-    private int id;
+    private Integer id;
     @NonNull
     private String title;
     private String description;
     private Timestamp deadline;
-    private int idProject;
-    private int idStatus;
-    private int idUser;
+    @NonNull
+    private Integer idProject;
+    @NonNull
+    private Integer idStatus;
+    @NonNull
+    private Integer idUser;
 
 }
