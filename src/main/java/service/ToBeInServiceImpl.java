@@ -2,15 +2,15 @@ package service;
 
 import model.ToBeIn;
 import org.springframework.stereotype.Service;
-import repository.ToBeInRepository;
+import repository.JdbcToBeInRepository;
 
 import java.util.List;
 
 @Service
 public class ToBeInServiceImpl implements ToBeInService{
-    private ToBeInRepository repository;
+    private JdbcToBeInRepository repository;
 
-    public ToBeInServiceImpl(ToBeInRepository repository) {
+    public ToBeInServiceImpl(JdbcToBeInRepository repository) {
         this.repository = repository;
     }
 
@@ -26,24 +26,23 @@ public class ToBeInServiceImpl implements ToBeInService{
 
     @Override
     public ToBeIn addToBeIn(ToBeIn toBeIn) {
-        ToBeIn foundToBeIn = this.repository.oneByProjectId(toBeIn.getIdProject());
-        if(foundToBeIn.getId() != 0){
+        ToBeIn foundToBeIn = this.repository.oneByUniqueColumn(toBeIn.getIdProject());
+        if(foundToBeIn != null){
             return null;
         }else {
-            System.out.println("Insertion");
             this.repository.save(toBeIn);
-            return this.repository.oneByProjectId(toBeIn.getIdProject());
+            return this.repository.oneByUniqueColumn(toBeIn.getIdProject());
         }
     }
 
     @Override
     public ToBeIn updateToBeIn(ToBeIn toBeIn) {
         ToBeIn foundToBeIn = this.repository.oneById(toBeIn.getId());
-        if(foundToBeIn.getId() != 0){
+        if(foundToBeIn != null){
             foundToBeIn.setCreatedAt(toBeIn.getCreatedAt());
             foundToBeIn.setIdProject(toBeIn.getIdProject());
             foundToBeIn.setIdUser(toBeIn.getIdUser());
-            this.repository.update(foundToBeIn);
+            this.repository.update(foundToBeIn, foundToBeIn.getId());
             return this.repository.oneById(toBeIn.getId());
         }else {
             return null;
@@ -51,12 +50,13 @@ public class ToBeInServiceImpl implements ToBeInService{
     }
 
     @Override
-    public void deleteToBeIn(int id) {
+    public int deleteToBeIn(int id) {
         ToBeIn foundToBeIn = this.repository.oneById(id);
-        if(foundToBeIn.getId() != 0){
-            this.repository.delete(foundToBeIn);
+        if(foundToBeIn != null){
+            this.repository.delete(id);
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
     }
 }
