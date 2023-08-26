@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class Status {
-    private int id;
+    private Integer id;
     @NonNull
     private String name;
 }
