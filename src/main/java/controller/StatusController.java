@@ -1,6 +1,7 @@
 package controller;
 
 import model.Status;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.StatusService;
 
@@ -16,28 +17,44 @@ public class StatusController {
     }
 
     @GetMapping("")
-    public List<Status> getAllStatus(){
-        return this.service.getAllStatus();
+    public ResponseEntity<List<Status>> getAllStatus(){
+        return ResponseEntity.ok(this.service.getAllStatus());
     }
 
     @GetMapping("/{id}")
-    public Status getStatusById(@PathVariable int id){
-        return this.service.getStatusById(id);
+    public ResponseEntity<Status> getStatusById(@PathVariable int id){
+        Status status = this.service.getStatusById(id);
+        if(status == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(status);
     }
 
     @PostMapping("")
-    public Status addStatus(@RequestBody Status status){
-        return this.service.addStatus(status);
+    public ResponseEntity<Status> addStatus(@RequestBody Status status){
+        Status createdStatus = this.service.addStatus(status);
+        if(createdStatus == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(createdStatus);
     }
 
     @PutMapping("/{id}")
-    public Status updateStatus(@PathVariable int id, @RequestBody Status status){
+    public ResponseEntity<Status> updateStatus(@PathVariable int id, @RequestBody Status status){
         status.setId(id);
-        return this.service.updateStatus(status);
+        Status updatedStatus = this.service.updateStatus(status);
+        if(updatedStatus == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(updatedStatus);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStatus(@PathVariable int id){
-        this.service.deleteStatus(id);
+    public ResponseEntity<Integer> deleteStatus(@PathVariable int id){
+        int deletionStatus = this.service.deleteStatus(id);
+        if(deletionStatus == 0){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }

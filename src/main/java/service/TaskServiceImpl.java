@@ -2,13 +2,13 @@ package service;
 
 import model.Task;
 import org.springframework.stereotype.Service;
-import repository.TaskRepository;
+import repository.JdbcTaskRepository;
 
 import java.util.List;
 @Service
 public class TaskServiceImpl implements TaskService{
-    private TaskRepository repository;
-    public TaskServiceImpl(TaskRepository repository) {
+    private JdbcTaskRepository repository;
+    public TaskServiceImpl(JdbcTaskRepository repository) {
         this.repository = repository;
     }
 
@@ -24,27 +24,27 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public Task addTask(Task task) {
-        Task foundTask = this.repository.oneByTitle(task.getTitle());
-        if(foundTask.getId() != 0){
+        Task foundTask = this.repository.oneByUniqueColumn(task.getTitle());
+        if(foundTask != null){
             return null;
         }else {
             System.out.println("Insertion");
             this.repository.save(task);
-            return this.repository.oneByTitle(task.getTitle());
+            return this.repository.oneByUniqueColumn(task.getTitle());
         }
     }
 
     @Override
     public Task updateTask(Task task) {
         Task foundTask = this.repository.oneById(task.getId());
-        if(foundTask.getId() != 0){
+        if(foundTask != null){
             foundTask.setTitle(task.getTitle());
             foundTask.setDescription(task.getDescription());
             foundTask.setDeadline(task.getDeadline());
             foundTask.setIdUser(task.getIdUser());
             foundTask.setIdProject(task.getIdProject());
             foundTask.setIdStatus(task.getIdStatus());
-            this.repository.update(foundTask);
+            this.repository.update(foundTask, foundTask.getId());
             return this.repository.oneById(task.getId());
         }else {
             return null;
@@ -52,12 +52,13 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public void deleteTask(int id) {
+    public int deleteTask(int id) {
         Task foundTask = this.repository.oneById(id);
-        if(foundTask.getId() != 0){
-            this.repository.delete(foundTask);
+        if(foundTask != null){
+            this.repository.delete(id);
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
     }
 }

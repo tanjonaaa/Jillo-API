@@ -7,12 +7,15 @@ import java.sql.Timestamp;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class ToBeIn {
-    private int id;
+    private Integer id;
     private Timestamp createdAt;
-    private int idUser;
-    private int idProject;
+    @NonNull
+    private Integer idUser;
+    @NonNull
+    private Integer idProject;
 }
