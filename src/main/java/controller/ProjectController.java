@@ -4,15 +4,16 @@ import model.Project;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ProjectService;
+import service.ProjectServiceImpl;
 
 import java.util.List;
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
 
-    ProjectService service;
+    ProjectServiceImpl service;
 
-    public ProjectController(ProjectService service) {
+    public ProjectController(ProjectServiceImpl service) {
         this.service = service;
     }
 

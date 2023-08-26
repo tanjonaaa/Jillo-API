@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class JDBCRepository<Model>{
     protected DataSource dataSource;
@@ -82,7 +84,7 @@ public abstract class JDBCRepository<Model>{
             statement.close();
             connection.close();
         }catch (SQLException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -181,10 +183,13 @@ public abstract class JDBCRepository<Model>{
         }
         return list.toString();
     }
-    
+
+    protected String ucFirst(String entry){
+        return entry.substring(0, 1).toUpperCase() + entry.substring(1);
+    }
+
     protected String getGetterName(String field){
-        String ucFirst = field.substring(0, 1).toUpperCase() + field.substring(1);
-        return "get"+ucFirst;
+        return "get"+this.ucFirst(this.snakeToCamelCase(field));
     }
 
     protected Method getGetter(Model model, String field) throws NoSuchMethodException{
@@ -194,6 +199,7 @@ public abstract class JDBCRepository<Model>{
         for (int i = 0; i < this.columns.size(); i++) {
             try{
                 Method getter = this.getGetter(model, this.columns.get(i));
+                System.out.println(getter);
                 statement.setObject(i+1, getter.invoke(model));
 
             }catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e){
@@ -204,4 +210,19 @@ public abstract class JDBCRepository<Model>{
         }
     }
 
+    protected String snakeToCamelCase(String toConvert){
+        if(toConvert.contains("_")){
+            List<String> splitted = Arrays.asList(toConvert.split("_"));
+            List<String> mutated = splitted.stream()
+                    .map((e) -> {
+                        if(splitted.indexOf(e) > 0){
+                            return this.ucFirst(e);
+                        }else {
+                            return e;
+                        }
+                    }).toList();
+            return String.join("", mutated);
+        }
+        return this.ucFirst(toConvert);
+    }
 }
