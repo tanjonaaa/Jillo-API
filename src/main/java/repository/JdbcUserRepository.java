@@ -1,12 +1,16 @@
 package repository;
 
+import model.Project;
 import model.User;
 import org.springframework.stereotype.Repository;
 import util.ResultSetMapper;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,4 +28,29 @@ public class JdbcUserRepository extends JDBCRepository<User>{
         return ResultSetMapper.mapResultSetToUser(resultSet);
     }
 
+    public List<Project> getProjects(int id){
+        List<Project> projects = new ArrayList<>();
+        try{
+            Connection connection = this.dataSource.getConnection();
+            String sql = "SELECT p.* FROM \"to_be_in\" t_b_i " +
+                    "INNER JOIN \"project\" p ON p.id = t_b_i.id_project " +
+                    "INNER JOIN \"user\" u ON u.id = t_b_i.id_user " +
+                    "WHERE t_b_i.id_user = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                projects.add(ResultSetMapper.mapResultSetToProject(resultSet));
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return projects;
+    }
 }

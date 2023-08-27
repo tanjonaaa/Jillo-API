@@ -1,5 +1,6 @@
 package controller;
 
+import model.Project;
 import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,5 +58,10 @@ public class UserController {
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/projects")
+    public ResponseEntity<List<Project>> getProjects(@PathVariable int id){
+        return ResponseEntity.ok(this.service.getProjects(id));
     }
 }

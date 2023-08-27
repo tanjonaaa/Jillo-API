@@ -1,5 +1,6 @@
 package service;
 
+import model.Project;
 import model.User;
 import org.springframework.stereotype.Service;
 import repository.JDBCRepository;
@@ -9,7 +10,6 @@ import java.util.List;
 @Service
 public class UserServiceImpl{
     private JdbcUserRepository repository;
-
     public UserServiceImpl(JdbcUserRepository repository) {
         this.repository = repository;
     }
@@ -27,7 +27,6 @@ public class UserServiceImpl{
         if(foundUser != null){
             return null;
         }else {
-            System.out.println("Insertion");
             this.repository.save(user);
             return this.repository.oneByUniqueColumn(user.getEmail());
         }
@@ -50,7 +49,6 @@ public class UserServiceImpl{
             return null;
         }
     }
-
     public int deleteUser(int id) {
         User foundUser = this.repository.oneById(id);
         if(foundUser != null){
@@ -59,5 +57,8 @@ public class UserServiceImpl{
         }else {
             return 0;
         }
+    }
+    public List<Project> getProjects(int id){
+        return this.repository.getProjects(id);
     }
 }
