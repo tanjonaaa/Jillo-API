@@ -2,9 +2,9 @@ package repository;
 
 import model.Project;
 import model.Task;
-import model.ToBeIn;
 import model.User;
 import org.springframework.stereotype.Repository;
+import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -23,12 +23,7 @@ public class JdbcProjectRepository extends JDBCRepository<Project>{
 
     @Override
     protected Project mapResultSet(ResultSet resultSet) throws SQLException {
-        Project project = new Project();
-        project.setId(resultSet.getInt("id"));
-        project.setTitle(resultSet.getString("title"));
-        project.setDescription(resultSet.getString("description"));
-        project.setIdUser(resultSet.getInt("id_user"));
-        return project;
+        return ResultSetMapper.mapResultSetToProject(resultSet);
     }
 
     public List<User> getUsers(int id){
@@ -46,12 +41,7 @@ public class JdbcProjectRepository extends JDBCRepository<Project>{
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()){
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                users.add(user);
+                users.add(ResultSetMapper.mapResultSetToUser(resultSet));
             }
 
             resultSet.close();
@@ -75,15 +65,7 @@ public class JdbcProjectRepository extends JDBCRepository<Project>{
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()){
-                Task task = new Task();
-                task.setId(resultSet.getInt("id"));
-                task.setTitle(resultSet.getString("title"));
-                task.setDescription(resultSet.getString("description"));
-                task.setDeadline(resultSet.getTimestamp("deadline"));
-                task.setIdProject(resultSet.getInt("id_project"));
-                task.setIdUser(resultSet.getInt("id_user"));
-                task.setIdStatus(resultSet.getInt("id_status"));
-                tasks.add(task);
+                tasks.add(ResultSetMapper.mapResultSetToTask(resultSet));
             }
 
         }catch(SQLException e){
@@ -106,15 +88,7 @@ public class JdbcProjectRepository extends JDBCRepository<Project>{
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()){
-                Task task = new Task();
-                task.setId(resultSet.getInt("id"));
-                task.setTitle(resultSet.getString("title"));
-                task.setDescription(resultSet.getString("description"));
-                task.setDeadline(resultSet.getTimestamp("deadline"));
-                task.setIdProject(resultSet.getInt("id_project"));
-                task.setIdUser(resultSet.getInt("id_user"));
-                task.setIdStatus(resultSet.getInt("id_status"));
-                tasks.add(task);
+                tasks.add(ResultSetMapper.mapResultSetToTask(resultSet));
             }
 
         }catch(SQLException e){

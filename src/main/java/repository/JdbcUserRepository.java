@@ -2,6 +2,7 @@ package repository;
 
 import model.User;
 import org.springframework.stereotype.Repository;
+import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -20,12 +21,7 @@ public class JdbcUserRepository extends JDBCRepository<User>{
 
     @Override
     protected User mapResultSet(ResultSet resultSet) throws SQLException {
-        User user = new User();
-        user.setId(resultSet.getInt("id"));
-        user.setUsername(resultSet.getString("username"));
-        user.setEmail(resultSet.getString("email"));
-        user.setPassword(resultSet.getString("password"));
-        return user;
+        return ResultSetMapper.mapResultSetToUser(resultSet);
     }
 
 }
