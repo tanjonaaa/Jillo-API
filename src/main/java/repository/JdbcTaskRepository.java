@@ -2,6 +2,7 @@ package repository;
 
 import model.Task;
 import org.springframework.stereotype.Repository;
+import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -21,14 +22,6 @@ public class JdbcTaskRepository extends JDBCRepository<Task>{
 
     @Override
     protected Task mapResultSet (ResultSet resultSet) throws SQLException{
-        Task task = new Task();
-        task.setId(resultSet.getInt("id"));
-        task.setTitle(resultSet.getString("title"));
-        task.setDescription(resultSet.getString("description"));
-        task.setDeadline(resultSet.getTimestamp("deadline"));
-        task.setIdUser(resultSet.getInt("id_user"));
-        task.setIdProject(resultSet.getInt("id_project"));
-        task.setIdStatus(resultSet.getInt("id_status"));
-        return task;
+        return ResultSetMapper.mapResultSetToTask(resultSet);
     }
 }

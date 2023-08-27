@@ -3,6 +3,7 @@ package repository;
 import model.Status;
 import model.User;
 import org.springframework.stereotype.Repository;
+import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -21,9 +22,6 @@ public class JdbcStatusRepository extends JDBCRepository<Status>{
 
     @Override
     protected Status mapResultSet (ResultSet resultSet) throws SQLException {
-        Status status= new Status();
-        status.setId(resultSet.getInt("id"));
-        status.setName(resultSet.getString("name"));
-        return status;
+        return ResultSetMapper.mapResultSetToStatus(resultSet);
     }
 }

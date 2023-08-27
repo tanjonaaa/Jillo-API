@@ -2,6 +2,7 @@ package repository;
 
 import model.ToBeIn;
 import org.springframework.stereotype.Repository;
+import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -20,13 +21,6 @@ public class JdbcToBeInRepository extends JDBCRepository<ToBeIn>{
 
     @Override
     protected ToBeIn mapResultSet(ResultSet resultSet) throws SQLException {
-        ToBeIn toBeIn = new ToBeIn();
-
-        toBeIn.setId(resultSet.getInt("id"));
-        toBeIn.setCreatedAt(resultSet.getTimestamp("created_at"));
-        toBeIn.setIdUser(resultSet.getInt("id_user"));
-        toBeIn.setIdProject(resultSet.getInt("id_project"));
-
-        return toBeIn;
+        return ResultSetMapper.mapResultSetToToBeIn(resultSet);
     }
 }
