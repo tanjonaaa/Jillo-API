@@ -1,6 +1,8 @@
 package controller;
 
 import model.Project;
+import model.Task;
+import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ProjectService;
@@ -37,9 +39,8 @@ public class ProjectController {
         Project createdProject = this.service.addProject(project);
         if(createdProject == null){
             return ResponseEntity.internalServerError().build();
-        }else{
-            return ResponseEntity.ok(createdProject);
         }
+        return ResponseEntity.ok(createdProject);
     }
 
     @PutMapping("/{id}")
@@ -61,5 +62,22 @@ public class ProjectController {
         }else{
             return ResponseEntity.ok().build();
         }
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<User>> getContributors(@PathVariable int id){
+        return ResponseEntity.ok(this.service.getCollaborators(id));
+    }
+
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<Task>> getTasks(@PathVariable int id){
+        return ResponseEntity.ok(this.service.getTasks(id));
+    }
+
+    @GetMapping("/{id}/status/{statusId}/tasks")
+    public ResponseEntity<List<Task>> getTasksByStatus(
+            @PathVariable int id, @PathVariable int statusId
+    ){
+        return ResponseEntity.ok(this.service.getTasksByStatus(id, statusId));
     }
 }

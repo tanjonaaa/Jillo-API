@@ -1,17 +1,26 @@
 package service;
 
 import model.Project;
+import model.Task;
+import model.ToBeIn;
+import model.User;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
+import repository.JdbcToBeInRepository;
+import repository.ToBeInRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 public class ProjectServiceImpl{
 
     private JdbcProjectRepository repository;
-    public ProjectServiceImpl(JdbcProjectRepository repository) {
+    private JdbcToBeInRepository toBeInRepository;
+    public ProjectServiceImpl(JdbcProjectRepository repository, JdbcToBeInRepository toBeInRepository) {
+
         this.repository = repository;
+        this.toBeInRepository = toBeInRepository;
     }
 
     public List<Project> getAllProjects() {
@@ -30,7 +39,13 @@ public class ProjectServiceImpl{
             return null;
         }else {
             this.repository.save(project);
-            return this.repository.oneByUniqueColumn(project.getTitle());
+            ToBeIn toBeIn = new ToBeIn();
+            Project createdProject = this.repository.oneByUniqueColumn(project.getTitle());
+            toBeIn.setIdProject(createdProject.getId());
+            toBeIn.setIdUser(createdProject.getIdUser());
+            toBeIn.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            this.toBeInRepository.save(toBeIn);
+            return createdProject;
         }
     }
 
@@ -55,5 +70,15 @@ public class ProjectServiceImpl{
         }else {
             return 0;
         }
+    }
+
+    public List<User> getCollaborators(int id){
+        return this.repository.getUsers(id);
+    }
+
+    public List<Task> getTasks(int id){ return this.repository.getTasks(id); }
+
+    public List<Task> getTasksByStatus(int id, int statusId){
+        return this.repository.getTasksByStatus(id, statusId);
     }
 }
