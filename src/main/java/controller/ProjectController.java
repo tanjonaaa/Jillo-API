@@ -5,7 +5,6 @@ import model.Task;
 import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.ProjectService;
 import service.ProjectServiceImpl;
 
 import java.util.List;
@@ -79,5 +78,19 @@ public class ProjectController {
             @PathVariable int id, @PathVariable int statusId
     ){
         return ResponseEntity.ok(this.service.getTasksByStatus(id, statusId));
+    }
+
+    @PostMapping("/{id}/users")
+    public ResponseEntity<List<User>> addCollaborator(
+            @PathVariable int id,
+            @RequestBody int idUser
+    ){
+        List<User> previousCollaborators = this.service.getCollaborators(id);
+        this.service.addCollaborator(id, idUser);
+        List<User> nextCollaborators = this.service.getCollaborators(id);
+        if(nextCollaborators.size() <= previousCollaborators.size()){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(nextCollaborators);
     }
 }

@@ -7,7 +7,6 @@ import model.User;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
 import repository.JdbcToBeInRepository;
-import repository.ToBeInRepository;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -80,5 +79,12 @@ public class ProjectServiceImpl{
 
     public List<Task> getTasksByStatus(int id, int statusId){
         return this.repository.getTasksByStatus(id, statusId);
+    }
+    public void addCollaborator(int id, int userId){
+        ToBeIn toBeIn = new ToBeIn();
+        toBeIn.setIdProject(id);
+        toBeIn.setIdUser(userId);
+        toBeIn.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        this.toBeInRepository.save(toBeIn);
     }
 }
