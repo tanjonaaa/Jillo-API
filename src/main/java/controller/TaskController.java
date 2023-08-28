@@ -1,18 +1,19 @@
 package controller;
 
 import model.Task;
+import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.TaskService;
+import service.TaskServiceImpl;
 
 import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
 
-    TaskService service;
+    TaskServiceImpl service;
 
-    public TaskController(TaskService service) {
+    public TaskController(TaskServiceImpl service) {
         this.service = service;
     }
 
@@ -56,5 +57,10 @@ public class TaskController {
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<User>> showAssignees(@PathVariable int id){
+        return ResponseEntity.ok(this.service.showAssignees(id));
     }
 }

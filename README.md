@@ -16,6 +16,8 @@
   - CRUD status: `CREATE - READ - UPDATE - DELETE status`
 - Add `users` to a project
 - Remove `users` from a project
-- Assign `tasks` to one or multiple `users` 
+- See collaborators of a project
+- See all the projects where a user is a `collaborator`
+- Assign `tasks` to one or multiple `users`
 - Change the status of a `task` (Draft - Planned - In progress - Done)
 

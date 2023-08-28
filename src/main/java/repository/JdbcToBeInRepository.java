@@ -23,4 +23,6 @@ public class JdbcToBeInRepository extends JDBCRepository<ToBeIn>{
     protected ToBeIn mapResultSet(ResultSet resultSet) throws SQLException {
         return ResultSetMapper.mapResultSetToToBeIn(resultSet);
     }
+
+
 }

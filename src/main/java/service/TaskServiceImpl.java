@@ -2,6 +2,7 @@ package service;
 
 import model.Project;
 import model.Task;
+import model.User;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
 import repository.JdbcTaskRepository;
@@ -84,5 +85,9 @@ public class TaskServiceImpl implements TaskService{
         }else {
             return 0;
         }
+    }
+
+    public List<User> showAssignees(int id){
+        return this.repository.getUsers(id);
     }
 }

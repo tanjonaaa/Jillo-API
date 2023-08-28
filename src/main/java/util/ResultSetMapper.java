@@ -54,4 +54,15 @@ public class ResultSetMapper {
 
         return toBeIn;
     }
+
+    public static ToBeAssignedTo mapResultSetToToBeAssignedTo(ResultSet resultSet) throws SQLException{
+        ToBeAssignedTo toBeAssignedTo = new ToBeAssignedTo();
+
+        toBeAssignedTo.setId(resultSet.getInt("id"));
+        toBeAssignedTo.setCreatedAt(resultSet.getTimestamp("created_at"));
+        toBeAssignedTo.setIdUser(resultSet.getInt("id_user"));
+        toBeAssignedTo.setIdTask(resultSet.getInt("id_task"));
+
+        return toBeAssignedTo;
+    }
 }
