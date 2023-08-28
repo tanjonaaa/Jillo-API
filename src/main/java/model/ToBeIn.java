@@ -2,18 +2,20 @@ package model;
 
 import lombok.*;
 
-@Getter
-@Setter
+import java.sql.Timestamp;
+
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class Project {
+@Getter
+@Setter
+public class ToBeIn {
     private Integer id;
-    @NonNull
-    private String title;
-    private String description;
+    private Timestamp createdAt;
     @NonNull
     private Integer idUser;
+    @NonNull
+    private Integer idProject;
 }

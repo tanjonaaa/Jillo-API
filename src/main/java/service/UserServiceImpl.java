@@ -1,60 +1,64 @@
 package service;
 
+import model.Project;
 import model.User;
 import org.springframework.stereotype.Service;
+import repository.JDBCRepository;
+import repository.JdbcUserRepository;
 import repository.UserRepository;
 import java.util.List;
 @Service
-public class UserServiceImpl implements UserService{
-    private UserRepository repository;
-
-    public UserServiceImpl(UserRepository repository) {
+public class UserServiceImpl{
+    private JdbcUserRepository repository;
+    public UserServiceImpl(JdbcUserRepository repository) {
         this.repository = repository;
     }
 
-    @Override
     public List<User> getAllUsers() {
         return this.repository.all();
     }
 
-    @Override
     public User getUserById(int id) {
         return this.repository.oneById(id);
     }
 
-    @Override
     public User addUser(User user) {
-        User foundUser = this.repository.oneByEmail(user.getEmail());
-        if(foundUser.getId() != 0){
+        User foundUser = this.repository.oneByUniqueColumn(user.getEmail());
+        if(foundUser != null){
             return null;
         }else {
-            System.out.println("Insertion");
             this.repository.save(user);
-            return this.repository.oneByEmail(user.getEmail());
+            return this.repository.oneByUniqueColumn(user.getEmail());
         }
     }
 
-    @Override
+
     public User updateUser(User user) {
         User foundUser = this.repository.oneById(user.getId());
-        if(foundUser.getId() != 0){
+        if(foundUser != null){
             foundUser.setUsername(user.getUsername());
             foundUser.setEmail(user.getEmail());
             foundUser.setPassword(user.getPassword());
-            this.repository.update(foundUser);
-            return this.repository.oneById(user.getId());
+            if(this.repository.oneByUniqueColumn(foundUser.getEmail()) == null){
+                this.repository.update(foundUser, user.getId());
+                return this.repository.oneById(user.getId());
+            }else{
+                return null;
+            }
         }else {
             return null;
         }
     }
-    
-    @Override
-    public void deleteUser(int id) {
+    public int deleteUser(int id) {
         User foundUser = this.repository.oneById(id);
-        if(foundUser.getId() != 0){
-            this.repository.delete(foundUser);
+        if(foundUser != null){
+            this.repository.delete(foundUser.getId());
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
+    }
+    public List<Project> getProjects(int id){
+        return this.repository.getProjects(id);
     }
 }

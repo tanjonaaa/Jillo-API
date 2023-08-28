@@ -1,66 +1,90 @@
 package service;
 
 import model.Project;
+import model.Task;
+import model.ToBeIn;
+import model.User;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
+import repository.JdbcToBeInRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
-public class ProjectServiceImpl implements ProjectService{
+public class ProjectServiceImpl{
 
     private JdbcProjectRepository repository;
-    public ProjectServiceImpl(JdbcProjectRepository repository) {
+    private JdbcToBeInRepository toBeInRepository;
+    public ProjectServiceImpl(JdbcProjectRepository repository, JdbcToBeInRepository toBeInRepository) {
+
         this.repository = repository;
+        this.toBeInRepository = toBeInRepository;
     }
-    @Override
+
     public List<Project> getAllProjects() {
         return this.repository.all();
     }
 
-    @Override
+
     public Project getProjectById(int id) {
-        Project foundProject = this.repository.oneById(id);
-        if(foundProject.getId() != 0){
-            return foundProject;
-        }else {
-            return null;
-        }
+        return this.repository.oneById(id);
     }
 
-    @Override
+
     public Project addProject(Project project) {
-        Project foundProject = this.repository.oneByTitle(project.getTitle());
-        if(foundProject.getId() != 0){
+        Project foundProject = this.repository.oneByUniqueColumn(project.getTitle());
+        if(foundProject != null){
             return null;
         }else {
-            System.out.println("Insertion");
             this.repository.save(project);
-            return this.repository.oneByTitle(project.getTitle());
+            ToBeIn toBeIn = new ToBeIn();
+            Project createdProject = this.repository.oneByUniqueColumn(project.getTitle());
+            toBeIn.setIdProject(createdProject.getId());
+            toBeIn.setIdUser(createdProject.getIdUser());
+            toBeIn.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            this.toBeInRepository.save(toBeIn);
+            return createdProject;
         }
     }
 
-    @Override
     public Project updateProject(Project project) {
         Project foundProject = this.repository.oneById(project.getId());
-        if(foundProject.getId() != 0){
+        if(foundProject != null){
             foundProject.setTitle(project.getTitle());
             foundProject.setDescription(project.getDescription());
             foundProject.setIdUser(project.getIdUser());
-            this.repository.update(foundProject);
+            this.repository.update(foundProject, foundProject.getId());
             return this.repository.oneById(project.getId());
         }else {
             return null;
         }
     }
 
-    @Override
-    public void deleteProject(int id) {
+    public int deleteProject(int id) {
         Project foundProject = this.repository.oneById(id);
-        if(foundProject.getId() != 0){
-            this.repository.delete(foundProject);
+        if(foundProject != null){
+            this.repository.delete(id);
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
+    }
+
+    public List<User> getCollaborators(int id){
+        return this.repository.getUsers(id);
+    }
+
+    public List<Task> getTasks(int id){ return this.repository.getTasks(id); }
+
+    public List<Task> getTasksByStatus(int id, int statusId){
+        return this.repository.getTasksByStatus(id, statusId);
+    }
+    public void addCollaborator(int id, int userId){
+        ToBeIn toBeIn = new ToBeIn();
+        toBeIn.setIdProject(id);
+        toBeIn.setIdUser(userId);
+        toBeIn.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        this.toBeInRepository.save(toBeIn);
     }
 }

@@ -1,151 +1,99 @@
 package repository;
 
 import model.Project;
+import model.Task;
+import model.User;
 import org.springframework.stereotype.Repository;
+import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 @Repository
-public class JdbcProjectRepository implements ProjectRepository{
+public class JdbcProjectRepository extends JDBCRepository<Project>{
 
-    private DataSource dataSource;
-
+    private static final  String tableName = "project";
+    private static final String uniqueField = "title";
+    private static final List<String> columns = Arrays.asList("title", "description", "id_user");
     public JdbcProjectRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource, tableName, uniqueField, columns);
     }
 
     @Override
-    public List<Project> all() {
-        List<Project> projects = new ArrayList<>();
-        try{
-            Connection connection = this.dataSource.getConnection();
-            String sql = "SELECT * FROM \"project\"";
-            Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery(sql);
-            while(resultSet.next()){
-                projects.add(mapResultSet(resultSet));
-            }
-
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return projects;
+    protected Project mapResultSet(ResultSet resultSet) throws SQLException {
+        return ResultSetMapper.mapResultSetToProject(resultSet);
     }
 
-    @Override
-    public Project oneById(int id) {
-        Project project = new Project();
+    public List<User> getUsers(int id){
+        List<User> users = new ArrayList<>();
         try{
             Connection connection = this.dataSource.getConnection();
-            String sql = "SELECT * FROM \"project\" WHERE id = ?";
+            String sql = "SELECT u.* FROM \"to_be_in\" t_b_i " +
+                    "INNER JOIN \"user\" u ON u.id = t_b_i.id_user " +
+                    "INNER JOIN \"project\" p ON p.id = t_b_i.id_project " +
+                    "WHERE p.id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            project = mapResultSet(resultSet);
 
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                users.add(ResultSetMapper.mapResultSetToUser(resultSet));
+            }
+
+            resultSet.close();
             statement.close();
             connection.close();
         }catch (SQLException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        return project;
+        return users;
     }
 
-    @Override
-    public Project oneByTitle(String title) {
-        Project project = new Project();
+    public List<Task> getTasks(int id){
+        List<Task> tasks = new ArrayList<>();
         try{
             Connection connection = this.dataSource.getConnection();
-            String sql = "SELECT * FROM \"project\" WHERE title = ?";
+            String sql = "SELECT * FROM \"task\" WHERE id_project = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, title);
+            statement.setInt(1, id);
+
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            project = mapResultSet(resultSet);
 
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
+            while (resultSet.next()){
+                tasks.add(ResultSetMapper.mapResultSetToTask(resultSet));
+            }
+
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
         }
-        return project;
+        return tasks;
     }
 
-    @Override
-    public void save(Project project) {
+    public List<Task> getTasksByStatus(int id, int statusId){
+        List<Task> tasks = new ArrayList<>();
         try{
-            Connection connection = dataSource.getConnection();
-            String sql = "INSERT INTO \"project\" (title, description, id_user) VALUES (?, ?, ?)";
+            Connection connection = this.dataSource.getConnection();
+            String sql = "SELECT * FROM \"task\" WHERE " +
+                    "id_project = ? AND id_status = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, project.getTitle());
-            statement.setString(2, project.getDescription());
-            statement.setInt(3, project.getIdUser());
+            statement.setInt(1, id);
+            statement.setInt(2, statusId);
 
-            statement.executeUpdate();
-            System.out.println("Votre projet a bien été inséré");
+            ResultSet resultSet = statement.executeQuery();
 
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
+            while (resultSet.next()){
+                tasks.add(ResultSetMapper.mapResultSetToTask(resultSet));
+            }
+
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
         }
-    }
-
-    @Override
-    public void update(Project project) {
-        try{
-            Connection connection = dataSource.getConnection();
-            String sql = "UPDATE \"project\" SET title = ?, description = ?, id_user = ? WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            statement.setString(1, project.getTitle());
-            statement.setString(2, project.getDescription());
-            statement.setInt(3, project.getIdUser());
-            statement.setInt(4, project.getId());
-
-            statement.executeUpdate();
-            System.out.println("Les données du projet ont bien été mises à jour");
-
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void delete(Project project) {
-        try{
-            Connection connection = dataSource.getConnection();
-            String sql = "DELETE FROM \"project\" WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            statement.setInt(1, project.getId());
-            statement.executeUpdate();
-            System.out.println("Le projet a bien été supprimé");
-
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
-    private Project mapResultSet (ResultSet resultSet) throws SQLException {
-        Project project = new Project();
-        project.setId(resultSet.getInt("id"));
-        project.setTitle(resultSet.getString("title"));
-        project.setDescription(resultSet.getString("description"));
-        project.setIdUser(resultSet.getInt("id_user"));
-        return project;
+        return tasks;
     }
 }

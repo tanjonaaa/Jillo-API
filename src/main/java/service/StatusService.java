@@ -9,5 +9,5 @@ public interface StatusService {
     Status getStatusById(int id);
     Status addStatus(Status status);
     Status updateStatus(Status status);
-    void deleteStatus(int id);
+    int deleteStatus(int id);
 }

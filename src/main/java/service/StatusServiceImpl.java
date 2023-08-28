@@ -1,15 +1,15 @@
 package service;
 
-import model.Project;
 import model.Status;
 import org.springframework.stereotype.Service;
-import repository.StatusRepository;
+import repository.JdbcStatusRepository;
+
 import java.util.List;
 @Service
 public class StatusServiceImpl implements StatusService{
-    private StatusRepository repository;
+    private final JdbcStatusRepository repository;
 
-    public StatusServiceImpl(StatusRepository repository) {
+    public StatusServiceImpl(JdbcStatusRepository repository) {
         this.repository = repository;
     }
 
@@ -20,32 +20,26 @@ public class StatusServiceImpl implements StatusService{
 
     @Override
     public Status getStatusById(int id) {
-        Status foundStatus = this.repository.oneById(id);
-        if(foundStatus.getId() != 0){
-            return foundStatus;
-        }else {
-            return null;
-        }
+        return this.repository.oneById(id);
     }
 
     @Override
     public Status addStatus(Status status) {
-        Status foundStatus = this.repository.oneByName(status.getName());
-        if(foundStatus.getId() != 0){
+        Status foundStatus = this.repository.oneByUniqueColumn(status.getName());
+        if(foundStatus != null){
             return null;
         }else {
-            System.out.println("Insertion");
             this.repository.save(status);
-            return this.repository.oneByName(status.getName());
+            return this.repository.oneByUniqueColumn(status.getName());
         }
     }
 
     @Override
     public Status updateStatus(Status status) {
         Status foundStatus = this.repository.oneById(status.getId());
-        if(foundStatus.getId() != 0){
+        if(foundStatus != null){
             foundStatus.setName(status.getName());
-            this.repository.update(foundStatus);
+            this.repository.update(foundStatus, foundStatus.getId());
             return this.repository.oneById(status.getId());
         }else {
             return null;
@@ -53,12 +47,13 @@ public class StatusServiceImpl implements StatusService{
     }
 
     @Override
-    public void deleteStatus(int id) {
+    public int deleteStatus(int id) {
         Status foundStatus = this.repository.oneById(id);
-        if(foundStatus.getId() != 0){
-            this.repository.delete(foundStatus);
+        if(foundStatus != null){
+            this.repository.delete(id);
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
     }
 }

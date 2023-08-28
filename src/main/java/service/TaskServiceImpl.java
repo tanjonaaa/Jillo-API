@@ -1,15 +1,26 @@
 package service;
 
+import model.Project;
 import model.Task;
+import model.User;
 import org.springframework.stereotype.Service;
-import repository.TaskRepository;
+import repository.JdbcProjectRepository;
+import repository.JdbcTaskRepository;
+import repository.JdbcUserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class TaskServiceImpl implements TaskService{
-    private TaskRepository repository;
-    public TaskServiceImpl(TaskRepository repository) {
+    private JdbcTaskRepository repository;
+    private JdbcProjectRepository projectRepository;
+    private JdbcUserRepository userRepository;
+
+    public TaskServiceImpl(JdbcTaskRepository repository, JdbcProjectRepository projectRepository, JdbcUserRepository userRepository) {
         this.repository = repository;
+        this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -24,27 +35,41 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public Task addTask(Task task) {
-        Task foundTask = this.repository.oneByTitle(task.getTitle());
-        if(foundTask.getId() != 0){
+        Task foundTask = this.repository.oneByUniqueColumn(task.getTitle());
+        if(foundTask != null){
             return null;
         }else {
-            System.out.println("Insertion");
-            this.repository.save(task);
-            return this.repository.oneByTitle(task.getTitle());
+            //Check if the project exists
+            Project foundProject = this.projectRepository.oneById(task.getIdProject());
+            if(foundProject != null){
+                //Check if the user is collaborator in the project
+                List<Project> userProjects = this.userRepository.getProjects(task.getIdUser());
+                List<Project> filteredProjects = userProjects.stream()
+                        .filter((p) -> p.getId().equals(task.getIdProject())).toList();
+                System.out.println(filteredProjects);
+                if(filteredProjects.size() > 0){
+                    this.repository.save(task);
+                    return this.repository.oneByUniqueColumn(task.getTitle());
+                }else{
+                    return null;
+                }
+            }else {
+                return null;
+            }
         }
     }
 
     @Override
     public Task updateTask(Task task) {
         Task foundTask = this.repository.oneById(task.getId());
-        if(foundTask.getId() != 0){
+        if(foundTask != null){
             foundTask.setTitle(task.getTitle());
             foundTask.setDescription(task.getDescription());
             foundTask.setDeadline(task.getDeadline());
             foundTask.setIdUser(task.getIdUser());
             foundTask.setIdProject(task.getIdProject());
             foundTask.setIdStatus(task.getIdStatus());
-            this.repository.update(foundTask);
+            this.repository.update(foundTask, foundTask.getId());
             return this.repository.oneById(task.getId());
         }else {
             return null;
@@ -52,12 +77,17 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public void deleteTask(int id) {
+    public int deleteTask(int id) {
         Task foundTask = this.repository.oneById(id);
-        if(foundTask.getId() != 0){
-            this.repository.delete(foundTask);
+        if(foundTask != null){
+            this.repository.delete(id);
+            return 1;
         }else {
-            System.out.println("Suppression ratée");
+            return 0;
         }
+    }
+
+    public List<User> showAssignees(int id){
+        return this.repository.getUsers(id);
     }
 }

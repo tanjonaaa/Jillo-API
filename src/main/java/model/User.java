@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @RequiredArgsConstructor
 public class User {
-    private int id;
+    private Integer id;
     @NonNull
     private String username;
     @NonNull
