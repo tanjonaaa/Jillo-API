@@ -5,16 +5,15 @@ import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.UserService;
-import service.UserServiceImpl;
 
 import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    UserServiceImpl service;
+    UserService service;
 
-    public UserController(UserServiceImpl service) {
+    public UserController(UserService service) {
         this.service = service;
     }
 

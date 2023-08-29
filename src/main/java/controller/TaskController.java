@@ -4,16 +4,16 @@ import model.Task;
 import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.TaskServiceImpl;
+import service.TaskService;
 
 import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
 
-    TaskServiceImpl service;
+    TaskService service;
 
-    public TaskController(TaskServiceImpl service) {
+    public TaskController(TaskService service) {
         this.service = service;
     }
 
