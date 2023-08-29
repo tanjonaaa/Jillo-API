@@ -3,9 +3,8 @@ package service;
 import model.Project;
 import model.User;
 import org.springframework.stereotype.Service;
-import repository.JDBCRepository;
 import repository.JdbcUserRepository;
-import repository.UserRepository;
+
 import java.util.List;
 @Service
 public class UserServiceImpl{
