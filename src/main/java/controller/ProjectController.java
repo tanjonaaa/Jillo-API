@@ -5,16 +5,16 @@ import model.Task;
 import model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.ProjectServiceImpl;
+import service.ProjectService;
 
 import java.util.List;
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
 
-    ProjectServiceImpl service;
+    ProjectService service;
 
-    public ProjectController(ProjectServiceImpl service) {
+    public ProjectController(ProjectService service) {
         this.service = service;
     }
 
