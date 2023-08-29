@@ -9,6 +9,7 @@ import repository.JdbcProjectRepository;
 import repository.JdbcToBeInRepository;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -81,10 +82,13 @@ public class ProjectServiceImpl{
         return this.repository.getTasksByStatus(id, statusId);
     }
     public void addCollaborator(int id, int userId){
-        ToBeIn toBeIn = new ToBeIn();
-        toBeIn.setIdProject(id);
-        toBeIn.setIdUser(userId);
-        toBeIn.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        this.toBeInRepository.save(toBeIn);
+        List<ToBeIn> foundToBeIn = this.toBeInRepository.getByForeignKeys(Arrays.asList(id, userId));
+        if(foundToBeIn.size() == 0){
+            ToBeIn toBeIn = new ToBeIn();
+            toBeIn.setIdProject(id);
+            toBeIn.setIdUser(userId);
+            toBeIn.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            this.toBeInRepository.save(toBeIn);
+        }
     }
 }

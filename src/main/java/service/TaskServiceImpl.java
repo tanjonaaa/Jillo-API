@@ -9,13 +9,12 @@ import repository.JdbcTaskRepository;
 import repository.JdbcUserRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService{
-    private JdbcTaskRepository repository;
-    private JdbcProjectRepository projectRepository;
-    private JdbcUserRepository userRepository;
+    private final JdbcTaskRepository repository;
+    private final JdbcProjectRepository projectRepository;
+    private final JdbcUserRepository userRepository;
 
     public TaskServiceImpl(JdbcTaskRepository repository, JdbcProjectRepository projectRepository, JdbcUserRepository userRepository) {
         this.repository = repository;
@@ -54,7 +53,7 @@ public class TaskServiceImpl implements TaskService{
                     return null;
                 }
             }else {
-                return null;
+                return null; //500
             }
         }
     }
