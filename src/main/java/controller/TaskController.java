@@ -63,4 +63,18 @@ public class TaskController {
     public ResponseEntity<List<User>> showAssignees(@PathVariable int id){
         return ResponseEntity.ok(this.service.showAssignees(id));
     }
+
+    @PostMapping("/{id}/users")
+    public ResponseEntity<List<User>> addAssignee(
+            @PathVariable int id,
+            @RequestBody int idUser
+    ){
+        List<User> previousAssignees = this.service.showAssignees(id);
+        this.service.addAssignee(id, idUser);
+        List<User> nextAssignees = this.service.showAssignees(id);
+        if(nextAssignees.size() <= previousAssignees.size()){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(nextAssignees);
+    }
 }
