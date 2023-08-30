@@ -1,9 +1,6 @@
 package service;
 
-import model.Project;
-import model.Task;
-import model.ToBeAssignedTo;
-import model.User;
+import model.*;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
 import repository.JdbcTaskRepository;
@@ -85,13 +82,22 @@ public class TaskService {
     }
     
     public void addAssignee(int id, int userId){
-        List<ToBeAssignedTo> foundToBeAssignedTo = this.toBeAssignedToRepository.getByForeignKeys(Arrays.asList(id, userId));
-        if(foundToBeAssignedTo.size() == 0){
-            ToBeAssignedTo toBeAssignedTo = new ToBeAssignedTo();
-            toBeAssignedTo.setIdTask(id);
-            toBeAssignedTo.setIdUser(userId);
-            toBeAssignedTo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            this.toBeAssignedToRepository.save(toBeAssignedTo);
+        //Check if the user and the project exist
+        Task foundTask = this.repository.oneById(id);
+        User foundUser = this.userRepository.oneById(userId);
+        if(foundTask != null && foundUser != null){
+            //Check if the user is a contributor in the project
+            List<User> contributors = this.projectRepository.getUsers(foundTask.getIdProject());
+            if(contributors.size() != 0 && contributors.contains(foundUser)){
+                List<ToBeAssignedTo> foundToBeAssignedTo = this.toBeAssignedToRepository.getByForeignKeys(Arrays.asList(id, userId));
+                if(foundToBeAssignedTo.size() == 0){
+                    ToBeAssignedTo toBeAssignedTo = new ToBeAssignedTo();
+                    toBeAssignedTo.setIdTask(id);
+                    toBeAssignedTo.setIdUser(userId);
+                    toBeAssignedTo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                    this.toBeAssignedToRepository.save(toBeAssignedTo);
+                }
+            }
         }
     }
 }
