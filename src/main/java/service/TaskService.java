@@ -1,13 +1,14 @@
 package service;
 
-import model.Project;
-import model.Task;
-import model.User;
+import model.*;
 import org.springframework.stereotype.Service;
 import repository.JdbcProjectRepository;
 import repository.JdbcTaskRepository;
+import repository.JdbcToBeAssignedToRepository;
 import repository.JdbcUserRepository;
 
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -15,10 +16,12 @@ public class TaskService {
     private final JdbcTaskRepository repository;
     private final JdbcProjectRepository projectRepository;
     private final JdbcUserRepository userRepository;
-    public TaskService(JdbcTaskRepository repository, JdbcProjectRepository projectRepository, JdbcUserRepository userRepository) {
+    private final JdbcToBeAssignedToRepository toBeAssignedToRepository;
+    public TaskService(JdbcTaskRepository repository, JdbcProjectRepository projectRepository, JdbcUserRepository userRepository, JdbcToBeAssignedToRepository toBeAssignedToRepository) {
         this.repository = repository;
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.toBeAssignedToRepository = toBeAssignedToRepository;
     }
     public List<Task> getAllTasks() {
         return this.repository.all();
@@ -76,5 +79,25 @@ public class TaskService {
     }
     public List<User> showAssignees(int id){
         return this.repository.getUsers(id);
+    }
+    
+    public void addAssignee(int id, int userId){
+        //Check if the user and the project exist
+        Task foundTask = this.repository.oneById(id);
+        User foundUser = this.userRepository.oneById(userId);
+        if(foundTask != null && foundUser != null){
+            //Check if the user is a contributor in the project
+            List<User> contributors = this.projectRepository.getUsers(foundTask.getIdProject());
+            if(contributors.size() != 0 && contributors.contains(foundUser)){
+                List<ToBeAssignedTo> foundToBeAssignedTo = this.toBeAssignedToRepository.getByForeignKeys(Arrays.asList(id, userId));
+                if(foundToBeAssignedTo.size() == 0){
+                    ToBeAssignedTo toBeAssignedTo = new ToBeAssignedTo();
+                    toBeAssignedTo.setIdTask(id);
+                    toBeAssignedTo.setIdUser(userId);
+                    toBeAssignedTo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+                    this.toBeAssignedToRepository.save(toBeAssignedTo);
+                }
+            }
+        }
     }
 }

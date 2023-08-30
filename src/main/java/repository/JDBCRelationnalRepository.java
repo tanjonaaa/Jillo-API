@@ -33,6 +33,7 @@ public abstract class JDBCRelationnalRepository<Relation> extends JDBCRepository
             PreparedStatement statement = connection.prepareStatement(sql);
 
             for (int i = 0; i < keys.size(); i++) {
+                System.out.println(keys.get(i));
                 statement.setObject(i+1, keys.get(i));
             }
 
