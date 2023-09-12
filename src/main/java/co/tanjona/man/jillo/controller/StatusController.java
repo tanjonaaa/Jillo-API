@@ -1,9 +1,9 @@
-package controller;
+package co.tanjona.man.jillo.controller;
 
-import model.Status;
+import co.tanjona.man.jillo.model.Status;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.StatusService;
+import co.tanjona.man.jillo.service.StatusService;
 
 import java.util.List;
 @RestController

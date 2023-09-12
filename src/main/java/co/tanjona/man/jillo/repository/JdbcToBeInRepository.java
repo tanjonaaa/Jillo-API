@@ -1,8 +1,8 @@
-package repository;
+package co.tanjona.man.jillo.repository;
 
-import model.ToBeIn;
+import co.tanjona.man.jillo.model.ToBeIn;
 import org.springframework.stereotype.Repository;
-import util.ResultSetMapper;
+import co.tanjona.man.jillo.util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;

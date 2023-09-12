@@ -1,4 +1,4 @@
-package repository;
+package co.tanjona.man.jillo.repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

@@ -1,9 +1,9 @@
-package service;
+package co.tanjona.man.jillo.service;
 
-import model.Project;
-import model.User;
+import co.tanjona.man.jillo.model.Project;
+import co.tanjona.man.jillo.model.User;
 import org.springframework.stereotype.Service;
-import repository.JdbcUserRepository;
+import co.tanjona.man.jillo.repository.JdbcUserRepository;
 
 import java.util.List;
 @Service

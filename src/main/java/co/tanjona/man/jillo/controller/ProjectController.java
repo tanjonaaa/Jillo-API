@@ -1,11 +1,11 @@
-package controller;
+package co.tanjona.man.jillo.controller;
 
-import model.Project;
-import model.Task;
-import model.User;
+import co.tanjona.man.jillo.model.Project;
+import co.tanjona.man.jillo.model.Task;
+import co.tanjona.man.jillo.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.ProjectService;
+import co.tanjona.man.jillo.service.ProjectService;
 
 import java.util.List;
 @RestController

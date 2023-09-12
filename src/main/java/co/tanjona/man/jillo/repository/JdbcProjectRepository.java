@@ -1,10 +1,10 @@
-package repository;
+package co.tanjona.man.jillo.repository;
 
-import model.Project;
-import model.Task;
-import model.User;
+import co.tanjona.man.jillo.model.Project;
+import co.tanjona.man.jillo.model.Task;
+import co.tanjona.man.jillo.model.User;
 import org.springframework.stereotype.Repository;
-import util.ResultSetMapper;
+import co.tanjona.man.jillo.util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;

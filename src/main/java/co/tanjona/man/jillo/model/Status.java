@@ -1,20 +1,16 @@
-package model;
+package co.tanjona.man.jillo.model;
 
 import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-@ToString
 @RequiredArgsConstructor
-public class User {
+public class Status {
     private Integer id;
     @NonNull
-    private String username;
-    @NonNull
-    private String email;
-    @NonNull
-    private String password;
+    private String name;
 }

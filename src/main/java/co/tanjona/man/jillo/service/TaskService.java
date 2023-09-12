@@ -1,11 +1,14 @@
-package service;
+package co.tanjona.man.jillo.service;
 
-import model.*;
+import co.tanjona.man.jillo.model.Project;
+import co.tanjona.man.jillo.model.Task;
+import co.tanjona.man.jillo.model.ToBeAssignedTo;
+import co.tanjona.man.jillo.model.User;
 import org.springframework.stereotype.Service;
-import repository.JdbcProjectRepository;
-import repository.JdbcTaskRepository;
-import repository.JdbcToBeAssignedToRepository;
-import repository.JdbcUserRepository;
+import co.tanjona.man.jillo.repository.JdbcProjectRepository;
+import co.tanjona.man.jillo.repository.JdbcTaskRepository;
+import co.tanjona.man.jillo.repository.JdbcToBeAssignedToRepository;
+import co.tanjona.man.jillo.repository.JdbcUserRepository;
 
 import java.sql.Timestamp;
 import java.util.Arrays;

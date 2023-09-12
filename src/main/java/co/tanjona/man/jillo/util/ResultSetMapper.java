@@ -1,6 +1,6 @@
-package util;
+package co.tanjona.man.jillo.util;
 
-import model.*;
+import co.tanjona.man.jillo.model.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

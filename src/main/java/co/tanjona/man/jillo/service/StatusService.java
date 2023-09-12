@@ -1,8 +1,8 @@
-package service;
+package co.tanjona.man.jillo.service;
 
-import model.Status;
+import co.tanjona.man.jillo.model.Status;
 import org.springframework.stereotype.Service;
-import repository.JdbcStatusRepository;
+import co.tanjona.man.jillo.repository.JdbcStatusRepository;
 
 import java.util.List;
 @Service

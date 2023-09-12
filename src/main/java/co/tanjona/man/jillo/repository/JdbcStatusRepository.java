@@ -1,14 +1,11 @@
-package repository;
+package co.tanjona.man.jillo.repository;
 
-import model.Status;
-import model.User;
+import co.tanjona.man.jillo.model.Status;
 import org.springframework.stereotype.Repository;
-import util.ResultSetMapper;
+import co.tanjona.man.jillo.util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 @Repository
 public class JdbcStatusRepository extends JDBCRepository<Status>{

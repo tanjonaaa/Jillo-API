@@ -1,4 +1,4 @@
-package model;
+package co.tanjona.man.jillo.model;
 
 import lombok.*;
 
@@ -11,11 +11,11 @@ import java.sql.Timestamp;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class ToBeAssignedTo {
+public class ToBeIn {
     private Integer id;
     private Timestamp createdAt;
     @NonNull
-    private Integer idTask;
-    @NonNull
     private Integer idUser;
+    @NonNull
+    private Integer idProject;
 }

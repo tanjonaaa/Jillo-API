@@ -1,8 +1,8 @@
-package service;
+package co.tanjona.man.jillo.service;
 
-import model.ToBeIn;
+import co.tanjona.man.jillo.model.ToBeIn;
 import org.springframework.stereotype.Service;
-import repository.JdbcToBeInRepository;
+import co.tanjona.man.jillo.repository.JdbcToBeInRepository;
 
 import java.util.List;
 

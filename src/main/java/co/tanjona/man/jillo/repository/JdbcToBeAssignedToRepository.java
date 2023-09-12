@@ -1,8 +1,7 @@
-package repository;
+package co.tanjona.man.jillo.repository;
 
-import model.ToBeAssignedTo;
+import co.tanjona.man.jillo.model.ToBeAssignedTo;
 import org.springframework.stereotype.Repository;
-import util.ResultSetMapper;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
